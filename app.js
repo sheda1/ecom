@@ -1,4 +1,7 @@
-const express = require('express');
+const dotenv=require('dotenv')
+dotenv.config()
+const express=require('express')
+
 
 const path = require('path');
 
@@ -6,7 +9,7 @@ const bodyParser = require('body-parser');
 
 const sequelize = require('./util/database')
 
-const user = require('./models/user');
+const User = require('./models/user');
 
 const cors = require('cors');
 
