@@ -1,33 +1,41 @@
-const dotenv=require('dotenv')
+const express  = require("express")
+const app = express()
+const dotenv = require("dotenv")
+const db = require('./database')
+const User = require("./model/user")
+const Expense = require("./model/expense")
+const cors = require('cors')
+// const Order = require("./model/order")
+// const Forgotpassword = require("./model/passwordReset")
+// const resetPassword = require('./routes/resetPassword')
+
 dotenv.config()
-const express=require('express')
+app.use(express.json())
+app.use(cors())
 
 
-const path = require('path');
+app.use('/user', require('./routes/user'))
+app.use('/expense', require('./routes/expenses'))
+// app.use("/password", resetPassword)
 
-const bodyParser = require('body-parser');
+User.hasMany(Expense)
+Expense.belongsTo(User)
 
-const sequelize = require('./util/database')
+// User.hasMany(Order)
+// Order.belongsTo(User)
 
-const User = require('./models/user');
+// User.hasMany(Forgotpassword);
+// Forgotpassword.belongsTo(User);
 
-const cors = require('cors');
 
-const authRoutes=require('./routes/auth')
 
-const app = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
-
-app.use(cors());
-
-app.use('/user',authRoutes);
-
-sequelize.sync()
-.then(()=>{
-    app.listen(3000)
+PORT = process.env.PORT || 3000;
+db.sync().then(() => {
+    console.log("db connected..")
+    app.listen(PORT)
 })
-.catch(err=>{
+.catch(err => {
     console.log(err)
 })
+
+
